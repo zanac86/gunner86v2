@@ -1,15 +1,15 @@
 // ************* НАСТРОЙКИ *************
 /*
-// "масштаб" эффектов. Чем меньше, тем крупнее!
-#define MADNESS_SCALE 100
-#define CLOUD_SCALE 30
-#define LAVA_SCALE 50
-#define PLASMA_SCALE 30
-#define RAINBOW_SCALE 30
-#define RAINBOW_S_SCALE 20
-#define ZEBRA_SCALE 30
-#define FOREST_SCALE 120
-#define OCEAN_SCALE 90
+  // "масштаб" эффектов. Чем меньше, тем крупнее!
+  #define MADNESS_SCALE 100
+  #define CLOUD_SCALE 30
+  #define LAVA_SCALE 50
+  #define PLASMA_SCALE 30
+  #define RAINBOW_SCALE 30
+  #define RAINBOW_S_SCALE 20
+  #define ZEBRA_SCALE 30
+  #define FOREST_SCALE 120
+  #define OCEAN_SCALE 90
 */
 
 

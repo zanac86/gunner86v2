@@ -3,6 +3,23 @@
 bool brightDirection;
 static bool startButtonHolding = false;                     // флаг: кнопка удерживается для изменения яркости/скорости/масштаба лампы кнопкой
 
+void showEffectNumber()
+{
+    FastLED.clear();
+    uint8_t c1 = currentMode / 10 + 0x30;
+    uint8_t c2 = currentMode % 10 + 0x30;
+    drawLetter(c1, 1, CRGB::White);
+    drawLetter(c2, 9, CRGB::White);
+    FastLED.show();
+
+
+    int t = 1000 + millis();
+    while (millis() < t)
+    {
+        delay(1);
+        ESP.wdtFeed();
+    }
+}
 
 void buttonTick()
 {
@@ -33,6 +50,7 @@ void buttonTick()
         {
             currentMode = 0;
         }
+        showEffectNumber();
         FastLED.setBrightness(modes[currentMode].Brightness);
         loadingFlag = true;
         settChanged = true;
@@ -46,6 +64,7 @@ void buttonTick()
         {
             currentMode = MODE_AMOUNT - 1;
         }
+        showEffectNumber();
         FastLED.setBrightness(modes[currentMode].Brightness);
         loadingFlag = true;
         settChanged = true;

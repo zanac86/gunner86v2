@@ -128,7 +128,7 @@ uint16_t XY(uint8_t x, uint8_t y)
 //   -  -  -  -  8  9  Х  Х  Х  Х  Х  Х  -  -  -  -
 //   -  -  -  -  7  6  5  4  3  2  1  0  -  -  -  -
 /*
-uint8_t XY (uint8_t x, uint8_t y) {
+  uint8_t XY (uint8_t x, uint8_t y) {
   // any out of bounds address maps to the first hidden pixel
   if ( (x >= 16) || (y >= 16) ) {
     return (128); //(LAST_VISIBLE_LED + 1);
@@ -155,7 +155,7 @@ uint8_t XY (uint8_t x, uint8_t y) {
 
   uint8_t i = (y * 16) + x;
   return XYTable[i];
-}
+  }
 */
 
 // оставлено для совместимости со эффектами из старых прошивок

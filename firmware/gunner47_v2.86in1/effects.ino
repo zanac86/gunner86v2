@@ -57,7 +57,7 @@ void setModeSettings(uint8_t Scale = 0U, uint8_t Speed = 0U)
 {
     modes[currentMode].Scale = Scale ? Scale : pgm_read_byte(&defaultSettings[currentMode][2]);
     modes[currentMode].Speed = Speed ? Speed : pgm_read_byte(&defaultSettings[currentMode][1]);
-    selectedSettings = 0U;
+    selectedSettings = 1U;
 }
 #endif //#if defined(USE_RANDOM_SETS_IN_APP) || defined(RANDOM_SETTINGS_IN_CYCLE_MODE)
 
@@ -124,7 +124,7 @@ void DrawLineF(float x1, float y1, float x2, float y2, CRGB color)
 }
 
 /* kostyamat добавил
- функция уменьшения яркости */
+  функция уменьшения яркости */
 CRGB makeDarker(const CRGB& color, fract8 howMuchDarker)
 {
     CRGB newcolor = color;
@@ -160,9 +160,9 @@ void drawPixelXYF(float x, float y, CRGB color) //, uint8_t darklevel = 0U)
 }
 
 /*
-//исправленная от SottNick для поддержки значений -1
-void drawPixelXYF(float x, float y, CRGB color)//, uint8_t darklevel = 0U)
-{
+  //исправленная от SottNick для поддержки значений -1
+  void drawPixelXYF(float x, float y, CRGB color)//, uint8_t darklevel = 0U)
+  {
   float xt = x + 1.0, yt = y + 1.0;
   if (xt<0 || yt<0) return; //не похоже, чтобы отрицательные значения хоть как-нибудь учитывались тут
   // extract the fractional parts and derive their inverses
@@ -180,11 +180,11 @@ void drawPixelXYF(float x, float y, CRGB color)//, uint8_t darklevel = 0U)
     clr.b = qadd8(clr.b, (color.b * wu[i]) >> 8);
     drawPixelXY(xn, yn, clr);
   }
-}
+  }
 */
 
 /* что-то мне эта доработка не понравилась...
-void drawCircleF(float x0, float y0, float radius, const CRGB &color, bool fill = false, float step = 0.25){
+  void drawCircleF(float x0, float y0, float radius, const CRGB &color, bool fill = false, float step = 0.25){
   float a = radius, b = 0.;
   float radiusError = step - a;
 
@@ -216,7 +216,7 @@ void drawCircleF(float x0, float y0, float radius, const CRGB &color, bool fill 
       radiusError += 2 * (b - a + step);
     }
   }
-}
+  }
 */
 
 void drawCircleF(float x0, float y0, float radius, CRGB color)
@@ -352,9 +352,9 @@ void sparklesRoutine()
 }
 
 /* убираем, т.к. есть копия dimAll()
-// функция плавного угасания цвета для всех пикселей
-void fader(uint8_t step)
-{
+  // функция плавного угасания цвета для всех пикселей
+  void fader(uint8_t step)
+  {
   for (uint8_t i = 0U; i < WIDTH; i++)
   {
     for (uint8_t j = 0U; j < HEIGHT; j++)
@@ -362,7 +362,7 @@ void fader(uint8_t step)
       fadePixel(i, j, step);
     }
   }
-}
+  }
 */
 void fadePixel(uint8_t i, uint8_t j, uint8_t step)          // новый фейдер
 {
@@ -631,7 +631,7 @@ void drawFrame(uint8_t pcnt, bool isColored)                    // прорис�
                 leds[XY(x, y)] = color;
             }
             else
-                if (y == 8U && SPARKLES)                                                 // если это самая нижняя строка искр - формитуем искорку из пламени
+                if (y == 8U && SPARKLES)                                                // если это самая нижняя строка искр - формитуем искорку из пламени
                 {
                     if (random(0, 20) == 0 && getPixColorXY(x, y - 1U) != 0U)
                     {
@@ -643,7 +643,7 @@ void drawFrame(uint8_t pcnt, bool isColored)                    // прорис�
                     }
                 }
                 else
-                    if (SPARKLES)                                                            // если это не самая нижняя строка искр - перемещаем искорку выше
+                    if (SPARKLES)                                                           // если это не самая нижняя строка искр - перемещаем искорку выше
                     {
                         // старая версия для яркости
                         newX = (random(0, 4)) ? x : (x + WIDTH + random(0U, 2U) - random(0U, 2U)) % WIDTH ;   // с вероятностью 1/3 смещаем искорку влево или вправо
@@ -695,7 +695,7 @@ void rainbowRoutine()
         rainbowHorVertRoutine(false);
     }
     else
-        if (modes[currentMode].Scale > 67U)      // если масштаб больше 67
+        if (modes[currentMode].Scale > 67U)     // если масштаб больше 67
         {
             rainbowHorVertRoutine(true);
         }
@@ -1981,13 +1981,13 @@ void matrixRoutine()
                 drawPixelXY(x, y, upperColor);
             }
             else
-                if (thisColor == 0U && random((100 - modes[currentMode].Scale) * HEIGHT) == 0U)  // если наш пиксель ещё не горит, иногда зажигаем новые цепочки
+                if (thisColor == 0U && random((100 - modes[currentMode].Scale) * HEIGHT) == 0U) // если наш пиксель ещё не горит, иногда зажигаем новые цепочки
                     //else if (thisColor == 0U && random((100 - modes[currentMode].Scale) * HEIGHT*3) == 0U)  // для длинных хвостов
                 {
                     drawPixelXY(x, y, 0x9bf800);
                 }
                 else
-                    if (thisColor <= 0x050800)                                                        // если наш пиксель почти погас, стараемся сделать затухание медленней
+                    if (thisColor <= 0x050800)                                                       // если наш пиксель почти погас, стараемся сделать затухание медленней
                     {
                         if (thisColor >= 0x030000)
                         {
@@ -2000,7 +2000,7 @@ void matrixRoutine()
                             }
                     }
                     else
-                        if (thisColor >= 0x900000)                                                        // если наш пиксель максимальной яркости, резко снижаем яркость
+                        if (thisColor >= 0x900000)                                                       // если наш пиксель максимальной яркости, резко снижаем яркость
                         {
                             drawPixelXY(x, y, 0x558800);
                         }
@@ -2020,7 +2020,7 @@ void matrixRoutine()
             }
         }
         else
-            if (thisColor <= 0x050800)                                                          // если наш верхний пиксель почти погас, стараемся сделать затухание медленней
+            if (thisColor <= 0x050800)                                                         // если наш верхний пиксель почти погас, стараемся сделать затухание медленней
             {
                 if (thisColor >= 0x030000)
                 {
@@ -2032,7 +2032,7 @@ void matrixRoutine()
                 }
             }
             else
-                if (thisColor >= 0x900000)                                                          // если наш верхний пиксель максимальной яркости, резко снижаем яркость
+                if (thisColor >= 0x900000)                                                         // если наш верхний пиксель максимальной яркости, резко снижаем яркость
                 {
                     drawPixelXY(x, HEIGHT - 1U, 0x558800);
                 }
@@ -2496,15 +2496,15 @@ void lightBallsRoutine()
 }
 
 /* чё-то надоел он мне совсем. кому надо - раскомментируйте код и вставляйте
-// ------------- блуждающий кубик -------------
-#define RANDOM_COLOR          (1U)                          // случайный цвет при отскоке
-int16_t coordB[2U];
-int8_t vectorB[2U];
-CRGB ballColor;
-//int8_t deltaValue; //ballSize;
+  // ------------- блуждающий кубик -------------
+  #define RANDOM_COLOR          (1U)                          // случайный цвет при отскоке
+  int16_t coordB[2U];
+  int8_t vectorB[2U];
+  CRGB ballColor;
+  //int8_t deltaValue; //ballSize;
 
-void ballRoutine()
-{
+  void ballRoutine()
+  {
   if (loadingFlag)
   {
     #if defined(USE_RANDOM_SETS_IN_APP) || defined(RANDOM_SETTINGS_IN_CYCLE_MODE)
@@ -2523,15 +2523,15 @@ void ballRoutine()
     }
     deltaValue = map(modes[currentMode].Scale * 2.55, 0U, 255U, 2U, max((uint8_t)min(WIDTH, HEIGHT) / 3, 2));
     ballColor = CHSV(random(0, 9) * 28, 255U, 255U);
-//    _pulse_color = CHSV(random(0, 9) * 28, 255U, 255U);
+  //    _pulse_color = CHSV(random(0, 9) * 28, 255U, 255U);
   }
 
-//  if (!(modes[currentMode].Scale & 0x01))
-//  {
-//    hue += (modes[currentMode].Scale - 1U) % 11U * 8U + 1U;
+  //  if (!(modes[currentMode].Scale & 0x01))
+  //  {
+  //    hue += (modes[currentMode].Scale - 1U) % 11U * 8U + 1U;
 
-//    ballColor = CHSV(hue, 255U, 255U);
-//  }
+  //    ballColor = CHSV(hue, 255U, 255U);
+  //  }
 
   if ((modes[currentMode].Scale & 0x01))
     for (uint8_t i = 0U; i < deltaValue; i++)
@@ -2564,16 +2564,16 @@ void ballRoutine()
     //vectorB[1] += random(0, 6) - 3;
   }
 
-//  if (modes[currentMode].Scale & 0x01)
-//    dimAll(135U);
-//    dimAll(255U - (modes[currentMode].Scale - 1U) % 11U * 24U);
-//  else
+  //  if (modes[currentMode].Scale & 0x01)
+  //    dimAll(135U);
+  //    dimAll(255U - (modes[currentMode].Scale - 1U) % 11U * 24U);
+  //  else
     FastLED.clear();
 
   for (uint8_t i = 0U; i < deltaValue; i++)
     for (uint8_t j = 0U; j < deltaValue; j++)
       leds[XY(coordB[0U] / 10 + i, coordB[1U] / 10 + j)] = ballColor;
-}
+  }
 */
 
 // ------------- белый свет старый -------------
@@ -2594,7 +2594,7 @@ void ballRoutine()
 // ------------- белый свет (светится горизонтальная полоса по центру лампы; масштаб - высота центральной горизонтальной полосы; скорость - регулировка от холодного к тёплому; яркость - общая яркость) -------------
 // mod by @Fruity
 /*void whiteColorStripeRoutine()
-{
+  {
   if (loadingFlag)
   {
     loadingFlag = false;
@@ -2623,7 +2623,7 @@ void ballRoutine()
       }
     }
   }
-}
+  }
 */
 
 // ------------- ещё более белый свет (с вертикальным вариантом) -------------
@@ -2773,7 +2773,7 @@ void FillNoise(int8_t layer)
     }
 }
 /* эти функции в данных эффектах не используются, но на всякий случай уже адаптированы
-void MoveX(int8_t delta) {
+  void MoveX(int8_t delta) {
   //CLS2();
   for (uint8_t y = 0; y < HEIGHT; y++) {
     for (uint8_t x = 0; x < WIDTH - delta; x++) {
@@ -2792,9 +2792,9 @@ void MoveX(int8_t delta) {
   //    leds[XY(x, y)] = ledsbuff[XY(x, y)];
   //  }
   //}
-}
+  }
 
-void MoveY(int8_t delta) {
+  void MoveY(int8_t delta) {
   //CLS2();
   for (uint8_t x = 0; x < WIDTH; x++) {
     for (uint8_t y = 0; y < HEIGHT - delta; y++) {
@@ -2813,7 +2813,7 @@ void MoveY(int8_t delta) {
   //    leds[XY(x, y)] = ledsbuff[XY(x, y)];
   //  }
   //}
-}
+  }
 */
 
 void MoveFractionalNoiseX(int8_t amplitude = 1, float shift = 0)
@@ -3285,11 +3285,11 @@ void BBallsRoutine()
 
 // --------------------------- эффект спирали ----------------------
 /*
- * Aurora: https://github.com/pixelmatix/aurora
- * https://github.com/pixelmatix/aurora/blob/sm3.0-64x64/PatternSpiro.h
- * Copyright (c) 2014 Jason Coon
- * Неполная адаптация SottNick
- */
+   Aurora: https://github.com/pixelmatix/aurora
+   https://github.com/pixelmatix/aurora/blob/sm3.0-64x64/PatternSpiro.h
+   Copyright (c) 2014 Jason Coon
+   Неполная адаптация SottNick
+*/
 byte spirotheta1 = 0;
 byte spirotheta2 = 0;
 //    byte spirohueoffset = 0; // будем использовать переменную сдвига оттенка hue из эффектов Радуга
@@ -3665,27 +3665,27 @@ void fire2012WithPalette4in1()
                 leds[XY(x, (HEIGHT - 1) - j)] = ColorFromPalette(LavaColors_p, colorindex);
             }
             else
-                if (modes[currentMode].Scale < 32)        // Firefall
+                if (modes[currentMode].Scale < 32)       // Firefall
                 {
                     leds[XY(x, (HEIGHT - 1) - j)] = ColorFromPalette(HeatColors_p, colorindex);
                 }
                 else
-                    if (modes[currentMode].Scale < 48)        // Waterfall
+                    if (modes[currentMode].Scale < 48)       // Waterfall
                     {
                         leds[XY(x, (HEIGHT - 1) - j)] = ColorFromPalette(WaterfallColors4in1_p, colorindex);
                     }
                     else
-                        if (modes[currentMode].Scale < 64)        // Skyfall
+                        if (modes[currentMode].Scale < 64)       // Skyfall
                         {
                             leds[XY(x, (HEIGHT - 1) - j)] = ColorFromPalette(CloudColors_p, colorindex);
                         }
                         else
-                            if (modes[currentMode].Scale < 80)        // Forestfall
+                            if (modes[currentMode].Scale < 80)       // Forestfall
                             {
                                 leds[XY(x, (HEIGHT - 1) - j)] = ColorFromPalette(ForestColors_p, colorindex);
                             }
                             else
-                                if (modes[currentMode].Scale < 96)        // Rainbowfall
+                                if (modes[currentMode].Scale < 96)       // Rainbowfall
                                 {
                                     leds[XY(x, (HEIGHT - 1) - j)] = ColorFromPalette(RainbowColors_p, colorindex);
                                 }
@@ -4990,7 +4990,7 @@ void rain(byte backgroundDepth, byte maxBrightness, byte spawnFreq, byte tailLen
             uint8_t* lightning = (uint8_t*) malloc(WIDTH * HEIGHT);
             while (lightning == NULL)
             {
-                Serial.println("lightning malloc failed");
+                //Serial.println("lightning malloc failed");
             }
 
 
@@ -5046,7 +5046,7 @@ void rain(byte backgroundDepth, byte maxBrightness, byte spawnFreq, byte tailLen
 
             while (noise == NULL)
             {
-                Serial.println("noise malloc failed");
+                //Serial.println("noise malloc failed");
             }
             int xoffset = noiseScale * x + hue;
 
@@ -5190,7 +5190,7 @@ void twinklesRoutine()
             }
         }
         else
-            if (ledsbuff[idx].g <= TWINKLES_SPEEDS)              // если нарастание яркости
+            if (ledsbuff[idx].g <= TWINKLES_SPEEDS)             // если нарастание яркости
             {
                 if (ledsbuff[idx].b > 255U - ledsbuff[idx].g - TWINKLES_MULTIPLIER)             // если досигнут максимум
                 {
@@ -6395,7 +6395,7 @@ void LavaLampRoutine()
             trackingObjectPosY[i] = 0.01;
         }
         else
-            if (trackingObjectPosY[i] > HEIGHT - 1.01)      // тоже на всякий пожарный
+            if (trackingObjectPosY[i] > HEIGHT - 1.01)     // тоже на всякий пожарный
             {
                 LavaLampGetspeed(i);
                 //trackingObjectShift[i] = 1+2*trackingObjectSpeedY[i]; менять радиус после отскока - плохая идея
@@ -6416,10 +6416,10 @@ void LavaLampRoutine()
     /*
       // инвертируем всё (получается какая-то хрень)
       uint8_t tsue = (modes[currentMode].Scale < 100U) ? 255U : 0U;
-    if (modes[currentMode].Brightness & 0x01)
+      if (modes[currentMode].Brightness & 0x01)
       for (uint16_t i = 0U; i < NUM_LEDS; i++)
         leds[i] = CHSV(hue, tsue, 255U - leds[i].getLuma());
-    else
+      else
       for (uint16_t i = 0U; i < NUM_LEDS; i++)
         leds[i] = CHSV(hue, tsue, 255U - leds[i].getAverageLight());
     */
@@ -6883,30 +6883,30 @@ void snakesRoutine()
 
 // не понравился
 /*
-#define MODEL_BORDER (HEIGHT - 4U)  // как далеко за экран может вылетить снаряд, если снаряд вылетает за экран, то всышка белого света (не особо логично)
-#define MODEL_WIDTH  (MODEL_BORDER + WIDTH  + MODEL_BORDER) // не трогать, - матиматика
-#define MODEL_HEIGHT (MODEL_BORDER + HEIGHT + MODEL_BORDER) // -//-
-#define PIXEL_X_OFFSET ((MODEL_WIDTH  - WIDTH ) / 2) // -//-
-#define PIXEL_Y_OFFSET ((MODEL_HEIGHT - HEIGHT) / 2) // -//-
+  #define MODEL_BORDER (HEIGHT - 4U)  // как далеко за экран может вылетить снаряд, если снаряд вылетает за экран, то всышка белого света (не особо логично)
+  #define MODEL_WIDTH  (MODEL_BORDER + WIDTH  + MODEL_BORDER) // не трогать, - матиматика
+  #define MODEL_HEIGHT (MODEL_BORDER + HEIGHT + MODEL_BORDER) // -//-
+  #define PIXEL_X_OFFSET ((MODEL_WIDTH  - WIDTH ) / 2) // -//-
+  #define PIXEL_Y_OFFSET ((MODEL_HEIGHT - HEIGHT) / 2) // -//-
 
-#define SPARK 8U // максимальное количество снарядов
-#define NUM_SPARKS WIDTH // количество разлетающихся петард (частей снаряда)
-const saccum78 gGravity = 10;
-const fract8  gBounce = 127;
-const fract8  gDrag = 255;
+  #define SPARK 8U // максимальное количество снарядов
+  #define NUM_SPARKS WIDTH // количество разлетающихся петард (частей снаряда)
+  const saccum78 gGravity = 10;
+  const fract8  gBounce = 127;
+  const fract8  gDrag = 255;
 
-typedef struct _DOTS_STORE {
+  typedef struct _DOTS_STORE {
     accum88 gBurstx;
     accum88 gBursty;
     saccum78 gBurstxv;
     saccum78 gBurstyv;
     CRGB gBurstcolor;
     bool gSkyburst = false;
-} DOTS_STORE;
-DOTS_STORE store[SPARK];
+  } DOTS_STORE;
+  DOTS_STORE store[SPARK];
 
-class Dot {    // класс для создания снарядов и питард
-public:
+  class Dot {    // класс для создания снарядов и питард
+  public:
   byte    show;
   byte    theType;
   accum88 x;
@@ -7046,7 +7046,7 @@ public:
     show = 1;
   }
 
-//  CRGB &piXY(byte x, byte y);
+  //  CRGB &piXY(byte x, byte y);
 
   int16_t scale15by8_local( int16_t i, fract8 _scale )
   {
@@ -7063,16 +7063,16 @@ public:
     screenerr = (ia - m) * scale8(255, N);
     return;
   };
-};
+  };
 
 
-uint16_t launchcountdown[SPARK];
-//bool flashing = true; // нахрен эти вспышки прямо в коде false напишу
-Dot gDot[SPARK];
-Dot gSparks[NUM_SPARKS];
+  uint16_t launchcountdown[SPARK];
+  //bool flashing = true; // нахрен эти вспышки прямо в коде false напишу
+  Dot gDot[SPARK];
+  Dot gSparks[NUM_SPARKS];
 
-CRGB overrun;
-CRGB& piXY(byte x, byte y) {
+  CRGB overrun;
+  CRGB& piXY(byte x, byte y) {
   //x -= PIXEL_X_OFFSET;
   x = (x - PIXEL_X_OFFSET) % WIDTH; // зацикливаем поле по иксу
   y -= PIXEL_Y_OFFSET;
@@ -7081,10 +7081,10 @@ CRGB& piXY(byte x, byte y) {
   } else
     //return empty; // fixed //  CRGB empty = CRGB(0,0,0);
     return overrun;//CRGB(0,0,0);
-}
+  }
 
 
-void sparkGen() {
+  void sparkGen() {
   for (byte c = 0; c < enlargedObjectNUM; c++) { // modes[currentMode].Scale / хз
     if( gDot[c].show == 0 ) {
       if( launchcountdown[c] == 0) {
@@ -7107,10 +7107,10 @@ void sparkGen() {
   }
 
   //myLamp.blur2d(20);
-}
+  }
 
-void fireworksRoutine()
-{
+  void fireworksRoutine()
+  {
   if (loadingFlag)
   {
     loadingFlag = false;
@@ -7126,7 +7126,7 @@ void fireworksRoutine()
   if (hue++ % 10 == 0U){//  EVERY_N_MILLIS(EFFECTS_RUN_TIMER * 10) {
     deltaValue = random8(25, 50);
   }
-//  EVERY_N_MILLIS(10) {//странный интервал
+  //  EVERY_N_MILLIS(10) {//странный интервал
     fadeToBlackBy(leds, NUM_LEDS, deltaValue);
     sparkGen();
     //memset8( leds, 0, NUM_LEDS * 3);
@@ -7139,8 +7139,8 @@ void fireworksRoutine()
       gSparks[b].Move(0, false);//flashing);
       gSparks[b].Draw();
     }
-//  }
-}
+  //  }
+  }
 */
 
 // ----------------------------- Жидкая лампа ---------------------
@@ -7312,13 +7312,13 @@ void LiquidLampPhysic()
 
 
 /*
-DEFINE_GRADIENT_PALETTE(MBVioletColors_gp){
+  DEFINE_GRADIENT_PALETTE(MBVioletColors_gp){
     0,  255,  0,  0, // red
     1,  46,  123,  87, // seaBlue
     80,  0,  0,  139, // DarkBlue
     150,  128,  0,  128, // purple
     255,  255,  0,  0
-};
+  };
 */
 // генератор палитр для Жидкой лампы (c) SottNick
 static const uint8_t MBVioletColors_arr[5][4] PROGMEM = // та же палитра, но в формате CHSV
@@ -7625,7 +7625,7 @@ void popcornRoutine()
           } else {
             rockets[r].x = (WIDTH * 256) - trackingObjectSpeedX[r];
           }
-        }*/
+          }*/
 
         // popcornGravity
         trackingObjectSpeedY[r] -= popcornGravity;
@@ -7949,7 +7949,7 @@ void fire2020Routine2()
         }
         /*if (modes[currentMode].Scale == 100U)
           deltaValue = random8(9U);
-        else
+          else
           deltaValue = modes[currentMode].Scale * 0.0899; // /100.0F * ((sizeof(firePalettes)/sizeof(TProgmemRGBPalette16 *))-0.01F))*/
         deltaValue = modes[currentMode].Scale * 0.0899;// /100.0F * ((sizeof(palette_arr) /sizeof(TProgmemRGBPalette16 *))-0.01F));
         if (deltaValue == 3U || deltaValue == 4U)
@@ -8831,8 +8831,8 @@ void fairyRoutine()
 // ============= ЭФФЕКТ ЗВЁЗДНЫЕ ВОЙНЫ ===============
 // (c) SottNick
 /* эффект стрёмный. доделывать не стал
-void starwarsEmit(uint8_t i) //particlesEmit(Particle_Abstract *particle, ParticleSysConfig *g)
-{
+  void starwarsEmit(uint8_t i) //particlesEmit(Particle_Abstract *particle, ParticleSysConfig *g)
+  {
     if (deltaHue++ & 0x01)
       if (hue++ & 0x01)
         hue2++;//counter++;
@@ -8861,9 +8861,9 @@ void starwarsEmit(uint8_t i) //particlesEmit(Particle_Abstract *particle, Partic
         pcnt--;
       }
     }
-}
+  }
 
-void starwarsRoutine(){
+  void starwarsRoutine(){
   if (loadingFlag)
   {
     loadingFlag = false;
@@ -8888,9 +8888,9 @@ void starwarsRoutine(){
   step = random(2U);
 
   pcnt = 1U;
-if (modes[currentMode].Speed & 0x01)
+  if (modes[currentMode].Speed & 0x01)
   dimAll(127);
-else FastLED.clear();
+  else FastLED.clear();
 
   //go over particles and update matrix cells on the way
   for(int i = 0; i<enlargedObjectNUM; i++) {
@@ -8913,13 +8913,13 @@ else FastLED.clear();
   }
   drawPixelXYF(boids[0].location.x, boids[0].location.y, CHSV(boids[0].colorIndex, 160U, 255U));
   drawPixelXYF(boids[1].location.x, boids[1].location.y, CHSV(boids[1].colorIndex, 160U, 255U));
-}
+  }
 */
 
 // ============= ЭФФЕКТ ИСТОЧНИКИ ===============
 // (c) SottNick
 /* тоже такое себе зрелище
-void fountainsDrift(uint8_t j){
+  void fountainsDrift(uint8_t j){
   //float shift = random8()
   boids[j].location.x += boids[j].velocity.x;
   boids[j].location.y += boids[j].velocity.y;
@@ -8943,9 +8943,9 @@ void fountainsDrift(uint8_t j){
     boids[j].location.y = HEIGHT + HEIGHT - 2 - boids[j].location.y;
     boids[j].velocity.y = -boids[j].velocity.y;
   }
-}
+  }
 
-void fountainsEmit(uint8_t i){
+  void fountainsEmit(uint8_t i){
   if (hue++ & 0x01)
     hue2++;//counter++;
 
@@ -8963,9 +8963,9 @@ void fountainsEmit(uint8_t i){
   else
     trackingObjectHue[i] = boids[j].colorIndex;//random8();
   trackingObjectIsShift[i] = true; // particle->isAlive
-}
+  }
 
-void fountainsRoutine(){
+  void fountainsRoutine(){
   if (loadingFlag)
   {
     loadingFlag = false;
@@ -9012,7 +9012,7 @@ void fountainsRoutine(){
       drawPixelXYF(trackingObjectPosX[i], trackingObjectPosY[i], baseRGB);
     }
   }
-}
+  }
 */
 
 // ============= Эффект Цветные драже ===============
@@ -9086,14 +9086,14 @@ void sandRoutine()
                         pcnt = y - 1;
                     }
                     else
-                        if (x > 0U && !leds[XY(x - 1, y - 1)])                                // если под нами склон налево
+                        if (x > 0U && !leds[XY(x - 1, y - 1)])                               // если под нами склон налево
                         {
                             leds[XY(x - 1, y - 1)] = leds[XY(x, y)];
                             leds[XY(x, y)] = 0;
                             pcnt = y - 1;
                         }
                         else
-                            if (x < WIDTH - 1 && !leds[XY(x + 1, y - 1)])                         // если под нами склон направо
+                            if (x < WIDTH - 1 && !leds[XY(x + 1, y - 1)])                        // если под нами склон направо
                             {
                                 leds[XY(x + 1, y - 1)] = leds[XY(x, y)];
                                 leds[XY(x, y)] = 0;
@@ -9180,7 +9180,7 @@ static const uint8_t MBAuroraColors_arr[5][4] PROGMEM = // палитра в ф�
   {80 , 1 , 210, 255},
   {180, 11, 175, 255},
   {255, 11 ,135, 255} //245
-};
+  };
 */
 //CRGBPalette16 myPal; уже есть эта переменная в эффекте Жидкая лампа
 

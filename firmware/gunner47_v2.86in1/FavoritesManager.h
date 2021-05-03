@@ -2,14 +2,34 @@
 #include "Constants.h"
 
 /*
- * Есть список всех режимов
- * Перемешиваем его и выдаем по очереди
- * пока не дойдем до конца
- * Теперь снова его перемешиваем.
- *
- */
+   Есть список всех режимов
+   Перемешиваем его и выдаем по очереди
+   пока не дойдем до конца
+   Теперь снова его перемешиваем.
+
+*/
 uint8_t shuffleFavoriteModes[MODE_AMOUNT];
 uint8_t shuffleCurrentIndex = 0;
+
+/*
+  Короткий список эффектов
+*/
+uint8_t demoListModes[] =
+{
+    EFF_PLASMA,
+    EFF_PRISMATA,
+    EFF_SPIDER,
+    EFF_MATRIX,
+    EFF_FIRE,
+    EFF_FOUNTAIN,
+    EFF_TWINKLES,
+    EFF_RAIN,
+    EFF_RAINBOW_VER
+};
+uint8_t demoCurrentIndex = 0;
+uint8_t demoModesCount = ARRAY_SIZE(demoListModes);
+
+bool demoMode = false;
 
 void favoritesShuffle()
 {
@@ -20,26 +40,50 @@ void favoritesShuffle()
         shuffleFavoriteModes[i] = shuffleFavoriteModes[x];
         shuffleFavoriteModes[x] = tmp;
     }
+    /*
+    for (int i = 0; i < MODE_AMOUNT; i++)
+    {
+        shuffleFavoriteModes[i] = i; // EFF_FOUNTAIN;
+    }
+    */
 }
 
 uint8_t favoritesNext()
 {
-    shuffleCurrentIndex++;
-    if (shuffleCurrentIndex >= MODE_AMOUNT)
+    if (demoMode)
     {
-        favoritesShuffle();
-        shuffleCurrentIndex = 0;
+        demoCurrentIndex++;
+        if (demoCurrentIndex >= demoModesCount)
+        {
+            demoCurrentIndex = 0;
+        }
+        return demoListModes[demoCurrentIndex];
     }
-    return shuffleFavoriteModes[shuffleCurrentIndex];
+    else
+    {
+        shuffleCurrentIndex++;
+        if (shuffleCurrentIndex >= MODE_AMOUNT)
+        {
+            favoritesShuffle();
+            shuffleCurrentIndex = 0;
+        }
+        return shuffleFavoriteModes[shuffleCurrentIndex];
+    }
 }
 
 void favoritesInit()
 {
-    shuffleCurrentIndex = 0;
-    for (int i = 0; i < MODE_AMOUNT; i++)
+    if (demoMode)
     {
-        shuffleFavoriteModes[i] = i;
+        demoCurrentIndex = 0;
     }
-    favoritesShuffle();
-
+    else
+    {
+        shuffleCurrentIndex = 0;
+        for (int i = 0; i < MODE_AMOUNT; i++)
+        {
+            shuffleFavoriteModes[i] = i;
+        }
+        favoritesShuffle();
+    }
 }

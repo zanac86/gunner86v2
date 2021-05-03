@@ -30,11 +30,8 @@
 CRGB leds[NUM_LEDS];
 
 #if defined(USE_RANDOM_SETS_IN_APP) || defined(RANDOM_SETTINGS_IN_CYCLE_MODE)
-uint8_t selectedSettings = 0U;
+uint8_t selectedSettings = 1U;
 #endif //#if defined(USE_RANDOM_SETS_IN_APP) || defined(RANDOM_SETTINGS_IN_CYCLE_MODE)
-#ifdef RANDOM_SETTINGS_IN_CYCLE_MODE
-uint8_t random_on = RANDOM_SETTINGS_IN_CYCLE_MODE;
-#endif //RANDOM_SETTINGS_IN_CYCLE_MODE
 
 #ifdef ESP_USE_BUTTON
 GButton touch(BTN_PIN, LOW_PULL, NORM_OPEN); // для физической (не сенсорной) кнопки нужно поменять LOW_PULL на HIGH_PULL. ну и кнопку нужно ставить без резистора между находящимися рядом пинами D2 и GND
@@ -46,12 +43,14 @@ static const uint8_t maxDim = max(WIDTH, HEIGHT);
 ModeType modes[MODE_AMOUNT];
 
 uint8_t currentMode = EFF_FIRE; // 0;
+// флаг установки новых параметров при смене эффекта
 bool loadingFlag = true;
 bool ONflag = true;
 bool settChanged = false;
+// флаг проверки кнопки. если ее нет то могут быть фантомные нажатия
 bool buttonEnabled = true;
 
-unsigned long autoplayDuration = 120;
+unsigned long autoplayDuration = 180;
 unsigned long autoPlayTimeout = 0;
 
 unsigned char matrixValue[8][16]; //это массив для эффекта Огонь
@@ -60,8 +59,7 @@ CRGB DriwingColor = CRGB(255, 255, 255);
 
 void setup()
 {
-    Serial.begin(115200);
-    Serial.println();
+    //Serial.begin(115200);
     ESP.wdtEnable(WDTO_8S);
 
     // КНОПКА
@@ -81,16 +79,24 @@ void setup()
     }
 
     FastLED.clear();
+    FastLED.show();
 
-    fill_solid(leds, 10, CRGB::Red);
-    FastLED.show();
-    delay(500);
-    fill_solid(leds, 10, CRGB::Green);
-    FastLED.show();
-    delay(500);
-    fill_solid(leds, 10, CRGB::Blue);
-    FastLED.show();
-    delay(500);
+    delay(1000);
+
+    demoMode = (digitalRead(BTN_PIN) == HIGH);
+    if (demoMode)
+    {
+        selectedSettings = 0;
+        autoplayDuration = 300;
+    }
+
+    CRGB cs[] = {CRGB::Red, CRGB::Green, CRGB::Blue, CRGB::Yellow, CRGB::Cyan};
+    for (int i = 0; i < 3; i++)
+    {
+        fill_solid(leds, (demoMode) ? 1 : 10, cs[i]);
+        FastLED.show();
+        delay(500);
+    }
 
     FastLED.clear();
     FastLED.show();
@@ -122,11 +128,8 @@ void nextEffect()
 
 void loop()
 {
-
     effectsTick();
-
     buttonTick();
-
     if (!settChanged)
     {
         if (millis() > autoPlayTimeout)
@@ -134,19 +137,10 @@ void loop()
             nextEffect();
         }
     }
-
     if (settChanged)
     {
         autoPlayTimeout = millis() + (autoplayDuration * 1000);
         settChanged = false;
     }
-
-    // для случайного порядка
-    // создать список номеров эффектов
-    // перемешать его
-    // пройти по индексу до конца
-    // в конце опять его перемешать
-    // можно две половины списка перемешивать
-
     ESP.wdtFeed();                                            // пнуть собаку
 }
