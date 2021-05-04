@@ -30,7 +30,7 @@
 CRGB leds[NUM_LEDS];
 
 #if defined(USE_RANDOM_SETS_IN_APP) || defined(RANDOM_SETTINGS_IN_CYCLE_MODE)
-uint8_t selectedSettings = 1U;
+uint8_t selectedSettings = 0U;
 #endif //#if defined(USE_RANDOM_SETS_IN_APP) || defined(RANDOM_SETTINGS_IN_CYCLE_MODE)
 
 #ifdef ESP_USE_BUTTON
@@ -101,11 +101,6 @@ void setup()
     FastLED.clear();
     FastLED.show();
 
-    for (uint8_t i = 0; i < MODE_AMOUNT; i++)
-    {
-        shuffleFavoriteModes[i] = i;
-    }
-
     restoreSettings();
 
     // ОСТАЛЬНОЕ
@@ -124,6 +119,7 @@ void nextEffect()
     FastLED.setBrightness(modes[currentMode].Brightness);
     loadingFlag = true;
     settChanged = true;
+    selectedSettings = 1U; // внутри эффектов флаг сбросится внутри установки новых случайных параметров
 }
 
 void loop()
@@ -142,5 +138,5 @@ void loop()
         autoPlayTimeout = millis() + (autoplayDuration * 1000);
         settChanged = false;
     }
-    ESP.wdtFeed();                                            // пнуть собаку
+    ESP.wdtFeed();                                            // покормить собаку :)
 }

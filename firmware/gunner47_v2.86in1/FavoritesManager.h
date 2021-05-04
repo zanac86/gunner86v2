@@ -40,12 +40,12 @@ void favoritesShuffle()
         shuffleFavoriteModes[i] = shuffleFavoriteModes[x];
         shuffleFavoriteModes[x] = tmp;
     }
-    /*
-    for (int i = 0; i < MODE_AMOUNT; i++)
-    {
-        shuffleFavoriteModes[i] = i; // EFF_FOUNTAIN;
-    }
-    */
+
+    //    for (int i = 0; i < MODE_AMOUNT; i++)
+    //    {
+    //        shuffleFavoriteModes[i] = EFF_RAINBOW_VER;
+    //    }
+
 }
 
 uint8_t favoritesNext()

@@ -5,6 +5,7 @@ static bool startButtonHolding = false;                     // флаг: кно�
 
 void showEffectNumber()
 {
+    return;
     FastLED.clear();
     uint8_t c1 = currentMode / 10 + 0x30;
     uint8_t c2 = currentMode % 10 + 0x30;
