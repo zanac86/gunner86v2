@@ -19,9 +19,7 @@
 #include <FastLED.h>
 #include "Types.h"
 #include "timerMinim.h"
-#ifdef ESP_USE_BUTTON
 #include <GyverButton.h>
-#endif
 #include "fonts.h"
 #include "FavoritesManager.h"
 
@@ -33,9 +31,9 @@ CRGB leds[NUM_LEDS];
 uint8_t selectedSettings = 0U;
 #endif //#if defined(USE_RANDOM_SETS_IN_APP) || defined(RANDOM_SETTINGS_IN_CYCLE_MODE)
 
-#ifdef ESP_USE_BUTTON
-GButton touch(BTN_PIN, LOW_PULL, NORM_OPEN); // для физической (не сенсорной) кнопки нужно поменять LOW_PULL на HIGH_PULL. ну и кнопку нужно ставить без резистора между находящимися рядом пинами D2 и GND
-#endif
+// для физической (не сенсорной) кнопки нужно поменять LOW_PULL на HIGH_PULL
+// ну и кнопку нужно ставить без резистора между находящимися рядом пинами D2 и GND
+GButton touch(BTN_PIN, LOW_PULL, NORM_OPEN);
 
 // --- ИНИЦИАЛИЗАЦИЯ ПЕРЕМЕННЫХ -------
 static const uint8_t maxDim = max(WIDTH, HEIGHT);
@@ -47,15 +45,11 @@ uint8_t currentMode = EFF_FIRE; // 0;
 bool loadingFlag = true;
 bool ONflag = true;
 bool settChanged = false;
-// флаг проверки кнопки. если ее нет то могут быть фантомные нажатия
-bool buttonEnabled = true;
 
 unsigned long autoplayDuration = 180;
 unsigned long autoPlayTimeout = 0;
 
 unsigned char matrixValue[8][16]; //это массив для эффекта Огонь
-
-CRGB DriwingColor = CRGB(255, 255, 255);
 
 void setup()
 {
@@ -63,11 +57,8 @@ void setup()
     ESP.wdtEnable(WDTO_8S);
 
     // КНОПКА
-#if defined(ESP_USE_BUTTON)
-    touch.setStepTimeout(BUTTON_STEP_TIMEOUT);
-    touch.setClickTimeout(BUTTON_CLICK_TIMEOUT);
-#endif
-
+    touch.setStepTimeout(100);
+    touch.setClickTimeout(500);
 
     // ЛЕНТА/МАТРИЦА
     FastLED.addLeds<WS2812B, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS)/*.setCorrection(TypicalLEDStrip)*/;

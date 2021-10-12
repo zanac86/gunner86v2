@@ -1,5 +1,3 @@
-#ifdef ESP_USE_BUTTON
-
 bool brightDirection;
 static bool startButtonHolding = false;                     // флаг: кнопка удерживается для изменения яркости/скорости/масштаба лампы кнопкой
 
@@ -24,11 +22,6 @@ void showEffectNumber()
 
 void buttonTick()
 {
-    if (!buttonEnabled)                                       // события кнопки не обрабатываются, если она заблокирована
-    {
-        return;
-    }
-
     touch.tick();
     uint8_t clickCount = touch.hasClicks() ? touch.getClicks() : 0U;
 
@@ -148,4 +141,3 @@ void buttonTick()
         loadingFlag = true;
     }
 }
-#endif

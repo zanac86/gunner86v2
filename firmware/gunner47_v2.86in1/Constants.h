@@ -1,14 +1,16 @@
 #pragma once
 
 // ============= НАСТРОЙКИ =============
-#define ESP_USE_BUTTON                                      // если строка не закомментирована, должна быть подключена кнопка (иначе лампа может регистрировать "фантомные" нажатия и некорректно устанавливать яркость)
-// если у вас не сенсорная, а обычная кнопка, ищите на первой вкладке строчку GButton touch(BTN_PIN, LOW_PULL, NORM_OPEN);
 
 #define LED_PIN               (2U)                          // пин ленты                (D4) - встроенный светодиод контроллера тоже на D4, поэтому лучше паять на D3 = #define LED_PIN (0U)
 #define BTN_PIN               (4U)                          // пин кнопки               (D2)
 
+//#define LED_PIN               (0U)                          // пин ленты                (D4) - встроенный светодиод контроллера тоже на D4, поэтому лучше паять на D3 = #define LED_PIN (0U)
+//#define BTN_PIN               (2U)                          // пин кнопки               (D2)
+
+
 // --- МАТРИЦА -------------------------
-#define CURRENT_LIMIT         (2500U)                       // лимит по току в миллиамперах, автоматически управляет яркостью (пожалей свой блок питания!) 0 - выключить лимит
+#define CURRENT_LIMIT         (2200U)                       // лимит по току в миллиамперах, автоматически управляет яркостью (пожалей свой блок питания!) 0 - выключить лимит
 
 #define WIDTH                 (16U)                         // ширина матрицы
 #define HEIGHT                (16U)                         // высота матрицы
@@ -66,8 +68,6 @@
 #define EFF_METABALLS           (29U)    // Meтaбoлз
 #define EFF_AURORA              (30U)    // Ceвepнoe cияниe
 #define EFF_SPIDER              (31U)    // Плaзмeннaя лaмпa
-
-
 #define EFF_LAVALAMP            (32U)    // Лaвoвaя лaмпa
 #define EFF_LIQUIDLAMP          (33U)    // Жидкaя лaмпa
 #define EFF_LIQUIDLAMP_AUTO     (34U)    // Жидкaя лaмпa (auto)
@@ -96,8 +96,6 @@
 #define EFF_COMET_THREE         (57U)    // Тpи кoмeты
 #define EFF_ATTRACT             (58U)    // Пpитяжeниe
 #define EFF_FIREFLY             (59U)    // Пapящий oгoнь
-
-
 #define EFF_FIREFLY_TOP         (60U)    // Bepxoвoй oгoнь
 #define EFF_SNAKE               (61U)    // Paдyжный змeй
 #define EFF_SPARKLES            (62U)    // Koнфeтти
@@ -122,8 +120,7 @@
 #define EFF_LIGHTER_TRACES      (81U)    // Cвeтлячки co шлeйфoм
 #define EFF_PAINTBALL           (82U)    // Пeйнтбoл
 #define EFF_RAINBOW_VER         (83U)    // Paдyгa
-
-#define MODE_AMOUNT           (84U)          // количество режимов
+#define MODE_AMOUNT             (84U)          // количество режимов
 
 // ============= МАССИВ НАСТРОЕК ЭФФЕКТОВ ПО УМОЛЧАНИЮ ===================
 // формат записи:
@@ -220,9 +217,6 @@ static const uint8_t defaultSettings[][3] PROGMEM =
     {   8, 196,  56} // Paдyгa
 }; //             ^-- проверьте, чтобы у предыдущей строки не было запятой после скобки
 
-//#define ARRAY_ROWS(ARRAY) (sizeof(ARRAY) / sizeof(ARRAY[0]))            // здесь была проверка, чтобы из-за неверного количества строк лампа не вырубалась.
-//const uint8_t defaultSettingsCOUNT = ARRAY_ROWS(defaultSettings);       // но она лишь место занимала. ошибаться нельзя!
-
 // ============= КОНЕЦ МАССИВА =====
 
 
@@ -236,13 +230,7 @@ static const uint8_t defaultSettings[][3] PROGMEM =
 #define FASTLED_INTERRUPT_RETRY_COUNT   (1)                 // default: 2; // Use this to determine how many times FastLED will attempt to re-transmit a frame if interrupted for too long by interrupts
 #define FASTLED_ESP8266_RAW_PIN_ORDER                       // FASTLED_ESP8266_RAW_PIN_ORDER, FASTLED_ESP8266_D1_PIN_ORDER or FASTLED_ESP8266_NODEMCU_PIN_ORDER
 
-
 #define NUM_LEDS              (uint16_t)(WIDTH * HEIGHT)
 #define SEGMENTS              (1U)                          // диодов в одном "пикселе" (для создания матрицы из кусков ленты). вряд ли эффекты будут корректно работать, если изменить этот параметр
 
 #define BRIGHTNESS            (40U)                         // стандартная маскимальная яркость (0-255). используется только в момент включения питания лампы
-
-#if defined (ESP_USE_BUTTON)
-#define BUTTON_STEP_TIMEOUT   (100U)                        // каждые BUTTON_STEP_TIMEOUT мс будет генерироваться событие удержания кнопки (для регулировки яркости)
-#define BUTTON_CLICK_TIMEOUT  (500U)                        // максимальное время между нажатиями кнопки в мс, до достижения которого считается серия последовательных нажатий
-#endif
