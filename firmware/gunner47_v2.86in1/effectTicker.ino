@@ -143,7 +143,7 @@ void effectsTick()
                 fire2020Routine2();
                 break;  // (39U) Oгoнь 2020
             case EFF_FIRE:
-                fireRoutine(true);
+                fireRoutine(false);
                 break;  // (40U) Oгoнь
             case EFF_WHIRL:
                 whirlRoutine(true);

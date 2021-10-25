@@ -45,89 +45,111 @@ uint8_t currentMode = EFF_FIRE; // 0;
 bool loadingFlag = true;
 bool ONflag = true;
 bool settChanged = false;
+bool setFavoriteMode = false; // after 3/4 clicks switch to fire or rainbow
+
 
 unsigned long autoplayDuration = 180;
+unsigned long autoplayFavoritesDuration = 1800;
 unsigned long autoPlayTimeout = 0;
 
 unsigned char matrixValue[8][16]; //это массив для эффекта Огонь
 
 void setup()
 {
-    //Serial.begin(115200);
-    ESP.wdtEnable(WDTO_8S);
+  //Serial.begin(115200);
+  ESP.wdtEnable(WDTO_8S);
 
-    // КНОПКА
-    touch.setStepTimeout(100);
-    touch.setClickTimeout(500);
+  // КНОПКА
+  touch.setStepTimeout(100);
+  touch.setClickTimeout(500);
 
-    // ЛЕНТА/МАТРИЦА
-    FastLED.addLeds<WS2812B, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS)/*.setCorrection(TypicalLEDStrip)*/;
-    //FastLED.addLeds<WS2812B, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(0xFFB0F0); // по предложению @kostyamat добавлена такая цветокоррекция "теперь можно получить практически чистый желтый цвет" и получилось плохо
-    FastLED.setBrightness(BRIGHTNESS);
-    if (CURRENT_LIMIT > 0)
-    {
-        FastLED.setMaxPowerInVoltsAndMilliamps(5, CURRENT_LIMIT);
-    }
+  // ЛЕНТА/МАТРИЦА
+  FastLED.addLeds<WS2812B, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS)/*.setCorrection(TypicalLEDStrip)*/;
+  //FastLED.addLeds<WS2812B, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(0xFFB0F0); // по предложению @kostyamat добавлена такая цветокоррекция "теперь можно получить практически чистый желтый цвет" и получилось плохо
+  FastLED.setBrightness(BRIGHTNESS);
+  if (CURRENT_LIMIT > 0)
+  {
+    FastLED.setMaxPowerInVoltsAndMilliamps(5, CURRENT_LIMIT);
+  }
 
-    FastLED.clear();
+  FastLED.clear();
+  FastLED.show();
+
+  delay(1000);
+
+  demoMode = (digitalRead(BTN_PIN) == HIGH);
+  if (demoMode)
+  {
+    selectedSettings = 0;
+    autoplayDuration = 300;
+  }
+
+  CRGB cs[] = {CRGB::Red, CRGB::Green, CRGB::Blue, CRGB::Yellow, CRGB::Cyan};
+  for (int i = 0; i < 3; i++)
+  {
+    fill_solid(leds, (demoMode) ? 1 : 10, cs[i]);
     FastLED.show();
+    delay(500);
+  }
 
-    delay(1000);
+  FastLED.clear();
+  FastLED.show();
 
-    demoMode = (digitalRead(BTN_PIN) == HIGH);
-    if (demoMode)
-    {
-        selectedSettings = 0;
-        autoplayDuration = 300;
-    }
+  restoreSettings();
 
-    CRGB cs[] = {CRGB::Red, CRGB::Green, CRGB::Blue, CRGB::Yellow, CRGB::Cyan};
-    for (int i = 0; i < 3; i++)
-    {
-        fill_solid(leds, (demoMode) ? 1 : 10, cs[i]);
-        FastLED.show();
-        delay(500);
-    }
-
-    FastLED.clear();
-    FastLED.show();
-
-    restoreSettings();
-
-    // ОСТАЛЬНОЕ
-    memset(matrixValue, 0, sizeof(matrixValue)); //это массив для эффекта Огонь. странно, что его нужно залить нулями
-    randomSeed(micros());
-    changePower();
-    favoritesInit();
-    autoPlayTimeout = millis() + (autoplayDuration * 1000);
-    loadingFlag = true;
-    settChanged = true;
+  // ОСТАЛЬНОЕ
+  memset(matrixValue, 0, sizeof(matrixValue)); //это массив для эффекта Огонь. странно, что его нужно залить нулями
+  randomSeed(micros());
+  changePower();
+  favoritesInit();
+  autoPlayTimeout = millis() + (autoplayDuration * 1000);
+  loadingFlag = true;
+  settChanged = true;
 }
 
 void nextEffect()
 {
-    currentMode = favoritesNext();
-    FastLED.setBrightness(modes[currentMode].Brightness);
-    loadingFlag = true;
-    settChanged = true;
-    selectedSettings = 1U; // внутри эффектов флаг сбросится внутри установки новых случайных параметров
+  currentMode = favoritesNext();
+  FastLED.setBrightness(modes[currentMode].Brightness);
+  loadingFlag = true;
+  settChanged = true;
+  selectedSettings = 1U; // внутри эффектов флаг сбросится внутри установки новых случайных параметров
+}
+
+void switchToEffect(uint8_t m)
+{
+  currentMode = m;
+  FastLED.setBrightness(modes[currentMode].Brightness);
+  loadingFlag = true;
+  settChanged = true;
+  selectedSettings = 1U; // внутри эффектов флаг сбросится внутри установки новых случайных параметров
+  setFavoriteMode = true;
 }
 
 void loop()
 {
-    effectsTick();
-    buttonTick();
-    if (!settChanged)
+  effectsTick();
+  buttonTick();
+  if (!settChanged)
+  {
+    if (millis() > autoPlayTimeout)
     {
-        if (millis() > autoPlayTimeout)
-        {
-            nextEffect();
-        }
+      nextEffect();
     }
-    if (settChanged)
+  }
+  if (settChanged)
+  {
+    if (setFavoriteMode)
     {
-        autoPlayTimeout = millis() + (autoplayDuration * 1000);
-        settChanged = false;
+      autoPlayTimeout = millis() + (autoplayFavoritesDuration * 1000);
     }
-    ESP.wdtFeed();                                            // покормить собаку :)
+    else
+    {
+      autoPlayTimeout = millis() + (autoplayDuration * 1000);
+    }
+  }
+  settChanged = false;
+  setFavoriteMode = false;
+
+  ESP.wdtFeed();                                            // покормить собаку :)
 }
